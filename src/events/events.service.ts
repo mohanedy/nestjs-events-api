@@ -58,7 +58,7 @@ export class EventsService {
       );
   }
 
-  private getEventsWithAttendeeCountFiltered(filter?: ListEvents) {
+  private getEventsWithAttendeeCountFilteredQuery(filter?: ListEvents) {
     const query = this.getEventsAttendeeCountQuery();
     if (!filter) return query;
 
@@ -87,7 +87,7 @@ export class EventsService {
     filter?: ListEvents,
     paginationOptions?: PaginateOptions,
   ): Promise<PaginatedEvents> {
-    const qb = this.getEventsWithAttendeeCountFiltered(filter);
+    const qb = this.getEventsWithAttendeeCountFilteredQuery(filter);
     return await paginate(qb, paginationOptions);
   }
 
