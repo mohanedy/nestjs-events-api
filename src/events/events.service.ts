@@ -91,7 +91,9 @@ export class EventsService {
     return await paginate(qb, paginationOptions);
   }
 
-  public async getEvent(id: number): Promise<Event | undefined> {
+  public async getEventWithAttendeeCount(
+    id: number,
+  ): Promise<Event | undefined> {
     const query = this.getEventsAttendeeCountQuery().andWhere('e.id = :id', {
       id,
     });
@@ -99,6 +101,12 @@ export class EventsService {
     this.logger.debug(query.getSql());
 
     return await query.getOne();
+  }
+
+  public async findOne(id: number): Promise<Event | undefined> {
+    return await this.eventsRepo.findOneBy({
+      id,
+    });
   }
 
   public async createEvent(

@@ -52,7 +52,7 @@ export class EventsController {
   @Get(':id')
   @UseInterceptors(ClassSerializerInterceptor)
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    const event = await this.eventsService.getEvent(id);
+    const event = await this.eventsService.getEventWithAttendeeCount(id);
     if (!event) throw new NotFoundException();
     return event;
   }
@@ -96,7 +96,7 @@ export class EventsController {
   }
 
   private async checkEventOwnership(id: number, user: User) {
-    const event = await this.eventsService.getEvent(id);
+    const event = await this.eventsService.findOne(id);
     if (!event) throw new NotFoundException();
     if (event.organizerId !== user.id)
       throw new ForbiddenException(
