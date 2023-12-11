@@ -80,7 +80,7 @@ export class EventsController {
         'You are not allowed to modify this event',
       );
 
-    return await this.eventsService.updateEvent(input);
+    return await this.eventsService.updateEvent(event, input);
   }
 
   @Delete(':id')
@@ -95,6 +95,13 @@ export class EventsController {
     await this.eventsService.deleteEvent(id);
   }
 
+  /**
+   * Check if the current user is the owner of the event with the given id and return the event if it exists or throw an
+   * exception if it doesn't exist or the user is not the owner.
+   * @param id - Event id
+   * @param user - Current user
+   * @private
+   */
   private async checkEventOwnership(id: number, user: User) {
     const event = await this.eventsService.findOne(id);
     if (!event) throw new NotFoundException();

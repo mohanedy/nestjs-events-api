@@ -115,18 +115,26 @@ export class EventsService {
     eventDto: CreateEventDto,
     currentUser: User,
   ): Promise<Event> {
-    return await this.eventsRepo.save({
-      ...eventDto,
-      when: new Date(eventDto.when),
-      organizerId: currentUser.id,
-    });
+    return await this.eventsRepo.save(
+      new Event({
+        ...eventDto,
+        when: new Date(eventDto.when),
+        organizerId: currentUser.id,
+      }),
+    );
   }
 
-  public async updateEvent(eventDto: UpdateEventDto): Promise<Event> {
-    return await this.eventsRepo.save({
-      ...eventDto,
-      when: eventDto.when ? new Date(eventDto.when) : eventDto.when,
-    });
+  public async updateEvent(
+    event: Event,
+    input: UpdateEventDto,
+  ): Promise<Event> {
+    return await this.eventsRepo.save(
+      new Event({
+        ...event,
+        ...input,
+        when: input.when ? new Date(input.when) : event.when,
+      }),
+    );
   }
 
   public async deleteEvent(id: number): Promise<DeleteResult> {
