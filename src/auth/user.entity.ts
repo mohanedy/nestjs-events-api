@@ -50,6 +50,5 @@ export class User {
   organizedEvents: Event[];
 
   @OneToMany(() => Attendee, (attendee) => attendee.user)
-  @Expose()
   attendedEvents: Attendee[];
 }
