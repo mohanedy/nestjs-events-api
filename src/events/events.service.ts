@@ -1,6 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Event, PaginatedEvents } from './event.entity';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, Repository, SelectQueryBuilder } from 'typeorm';
 import { Injectable, Logger } from '@nestjs/common';
 import { AttendeeAnswerEnum } from './attendee.entity';
 import { ListEvents, WhenEventFilter } from './input/list.events';
@@ -22,11 +22,11 @@ export class EventsService {
     private readonly eventsRepo: Repository<Event>,
   ) {}
 
-  private getEventsBaseQuery() {
+  private getEventsBaseQuery(): SelectQueryBuilder<Event> {
     return this.eventsRepo.createQueryBuilder('e').orderBy('e.id', 'DESC');
   }
 
-  public getEventsAttendeeCountQuery() {
+  public getEventsAttendeeCountQuery(): SelectQueryBuilder<Event> {
     return this.getEventsBaseQuery()
       .loadRelationCountAndMap('e.attendeeCount', 'e.attendees')
       .loadRelationCountAndMap(
@@ -58,7 +58,9 @@ export class EventsService {
       );
   }
 
-  private getEventsWithAttendeeCountFilteredQuery(filter?: ListEvents) {
+  private getEventsWithAttendeeCountFilteredQuery(
+    filter?: ListEvents,
+  ): SelectQueryBuilder<Event> {
     const query = this.getEventsAttendeeCountQuery();
     if (!filter) return query;
 
@@ -145,7 +147,9 @@ export class EventsService {
     );
   }
 
-  private getEventsOrganizedByUserIdQuery(userId: number) {
+  private getEventsOrganizedByUserIdQuery(
+    userId: number,
+  ): SelectQueryBuilder<Event> {
     return this.getEventsBaseQuery().where('e.organizerId = :userId', {
       userId,
     });
@@ -161,7 +165,9 @@ export class EventsService {
     );
   }
 
-  private getEventsAttendedByUserIdPaginatedQuery(userId: number) {
+  private getEventsAttendedByUserIdPaginatedQuery(
+    userId: number,
+  ): SelectQueryBuilder<Event> {
     return this.getEventsBaseQuery()
       .leftJoinAndSelect('e.attendees', 'a')
       .where('a.userId = :userId', { userId });
