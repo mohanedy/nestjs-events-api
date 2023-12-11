@@ -3,11 +3,9 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
-  Get,
   Inject,
   Post,
   SerializeOptions,
-  UseGuards,
   UseInterceptors,
   ValidationPipe,
 } from '@nestjs/common';
@@ -16,8 +14,6 @@ import CreateUserDto from './input/create-user.dto';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { JwtAuthGuard } from './jwt-auth.guard';
-import { CurrentUser } from './current-user.decorator';
 
 @Controller('users')
 @SerializeOptions({ strategy: 'excludeAll' })
